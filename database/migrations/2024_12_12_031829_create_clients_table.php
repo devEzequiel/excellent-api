@@ -8,8 +8,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('clients', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->uuid('uuid')->primary();
+            $table->uuid()->primary();
             $table->string('corporate_name');
             $table->string('cnpj');
             $table->string('email');
