@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
-            $table->uuid()->unique();
+            $table->uuid()->unique()->default(DB::raw('uuid_generate_v4()'));
             $table->string('corporate_name');
             $table->string('cnpj');
             $table->string('email');
