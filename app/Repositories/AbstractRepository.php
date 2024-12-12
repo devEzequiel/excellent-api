@@ -30,13 +30,10 @@ abstract class AbstractRepository
         return $this->model->search($search)->get();
     }
 
-    /**
-     * @param int $id
-     * @return Model|null
-     */
-    public function getById(int $id): ?Model
+
+    public function getById(string $uuid): ?Model
     {
-        return $this->model->find($id);
+        return $this->model->find($uuid);
     }
 
     /**
@@ -49,13 +46,13 @@ abstract class AbstractRepository
     }
 
     /**
-     * @param int $id
+     * @param string $id
      * @param array $data
      * @return Model|null
      */
-    public function update(int $id, array $data): ?Model
+    public function update(string $uuid, array $data): ?Model
     {
-        $record = $this->find($id);
+        $record = $this->model->find($uuid);
 
         if ($record) {
             $record->update($data);
@@ -65,12 +62,12 @@ abstract class AbstractRepository
     }
 
     /**
-     * @param int $id
+     * @param string $uuid
      * @return bool
      */
-    public function delete(int $id): bool
+    public function delete(string $uuid): bool
     {
-        $record = $this->find($id);
+        $record = $this->model->find($uuid);
 
         if ($record) {
             return $record->delete();
