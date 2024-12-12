@@ -27,9 +27,9 @@ abstract class Controller extends BaseController
      * @param string $message
      * @return JsonResponse
      */
-    public function responseCreated(string $message = ''): JsonResponse
+    public function responseCreated($data, string $message = ''): JsonResponse
     {
-        return response()->json($message ? ['message' => $message] : null, Response::HTTP_CREATED);
+        return response()->json(['message' => $message, 'data' => $data], Response::HTTP_CREATED);
     }
 
     /**

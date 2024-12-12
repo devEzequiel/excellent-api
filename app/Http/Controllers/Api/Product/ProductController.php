@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Product;
 
+use App\Domains\Product\Dtos\ProductDto;
+use App\Domains\Product\Models\Product;
+use App\Domains\Product\Services\ProductService;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Domains\Client\Services\ClientService;
-use App\Domains\Client\Models\Client;
-use App\Domains\Client\Dtos\ClientDto;
 
-class ClientController extends Controller
+class ProductController extends Controller
 {
-    private ClientService $service;
+    private ProductService $service;
 
-    public function __construct(ClientService $service)
+    public function __construct(ProductService $service)
     {
         $this->service = $service;
     }
@@ -23,9 +23,9 @@ class ClientController extends Controller
         try {
             $search = $request->only(['corporate_name', 'cnpj', 'email']);
 
-            $clients = $this->service->list($search);
+            $products = $this->service->list($search);
 
-            return response()->json($clients);
+            return response()->json($products);
         } catch (\Exception $e) {
             return $this->responseUnprocessableEntity($e->getMessage());
         }
@@ -34,9 +34,9 @@ class ClientController extends Controller
     public function show(int $id)
     {
         try {
-            $client = $this->service->findById($id);
+            $product = $this->service->findById($id);
 
-            return $this->responseOk($client);
+            return $this->responseOk($product);
         } catch (\Exception $e) {
             return $this->responseNotFound($e->getMessage());
         }
@@ -45,7 +45,7 @@ class ClientController extends Controller
     public function store(Request $request): JsonResponse
     {
         try {
-            $dto = ClientDto::fromArray($request->all());
+            $dto = ProductDto::fromArray($request->all());
             $this->service->create($dto);
 
             return $this->responseCreated("Product created.");
@@ -54,22 +54,22 @@ class ClientController extends Controller
         }
     }
 
-    public function update(Request $request, Client $client): JsonResponse
+    public function update(Request $request, Product $product): JsonResponse
     {
         try {
-            $dto = ClientDto::fromArray($request->all());
-            $updatedClient = $this->service->update($client->id, $dto);
+            $dto = ProductDto::fromArray($request->all());
+            $updatedProduct = $this->service->update($product->id, $dto);
 
-            return response()->json(['data' => $updatedClient]);
+            return response()->json(['data' => $updatedProduct]);
         } catch (\Exception $e) {
             return $this->responseUnprocessableEntity($e->getMessage());
         }
     }
 
-    public function destroy(Client $client): JsonResponse
+    public function destroy(Product $product): JsonResponse
     {
         try {
-            $this->service->delete($client->id);
+            $this->service->delete($product->id);
 
             return response()->json(['message' => 'Product deleted successfully.']);
         } catch (\Exception $e) {
