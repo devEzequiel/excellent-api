@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Domains\Client\Dtos;
+namespace App\Domains\Order\Dtos;
 
-class ClientDto
+class OrderDto
 {
     public string $corporate_name;
     public string $cnpj;
@@ -19,10 +19,7 @@ class ClientDto
     }
 
     /**
-     * Create a ClientDto instance from an array.
-     *
-     * @param array $data Input data array containing 'corporate_name', 'cnpj', and 'email'.
-     * @return self A new instance of ClientDto.
+     * Cria uma instância do DTO a partir de um array (exemplo: dados da requisição).
      */
     public static function fromArray(array $data): self
     {
