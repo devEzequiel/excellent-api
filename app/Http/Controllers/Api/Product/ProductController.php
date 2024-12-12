@@ -6,6 +6,9 @@ use App\Domains\Product\Dtos\ProductDto;
 use App\Domains\Product\Models\Product;
 use App\Domains\Product\Services\ProductService;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Product\CreateProductRequest;
+use App\Http\Requests\Product\SearchProductRequest;
+use App\Http\Requests\Product\UpdateProductRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -18,23 +21,23 @@ class ProductController extends Controller
         $this->service = $service;
     }
 
-    public function index(Request $request): JsonResponse
+    public function index(SearchProductRequest $request): JsonResponse
     {
         try {
-            $search = $request->only(['corporate_name', 'cnpj', 'email']);
+            $search = $request->validated();
 
             $products = $this->service->list($search);
 
-            return response()->json($products);
+            return $this->responseOk($products);
         } catch (\Exception $e) {
             return $this->responseUnprocessableEntity($e->getMessage());
         }
     }
 
-    public function show(int $id)
+    public function show(string $uuid)
     {
         try {
-            $product = $this->service->findById($id);
+            $product = $this->service->findById($uuid);
 
             return $this->responseOk($product);
         } catch (\Exception $e) {
@@ -42,36 +45,36 @@ class ProductController extends Controller
         }
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(CreateProductRequest $request): JsonResponse
     {
         try {
-            $dto = ProductDto::fromArray($request->all());
-            $this->service->create($dto);
+            $dto = ProductDto::fromArray($request->validated());
+            $product = $this->service->create($dto);
 
-            return $this->responseCreated("Product created.");
+            return $this->responseCreated($product, "Product created.");
         } catch (\Exception $e) {
             return $this->responseUnprocessableEntity($e->getMessage());
         }
     }
 
-    public function update(Request $request, Product $product): JsonResponse
+    public function update(UpdateProductRequest $request, string $uuid): JsonResponse
     {
         try {
-            $dto = ProductDto::fromArray($request->all());
-            $updatedProduct = $this->service->update($product->id, $dto);
+            $dto = ProductDto::fromArray($request->validated());
+            $updatedProduct = $this->service->update($uuid, $dto);
 
-            return response()->json(['data' => $updatedProduct]);
+            return $this->responseOk($updatedProduct, 'Product updated.');
         } catch (\Exception $e) {
             return $this->responseUnprocessableEntity($e->getMessage());
         }
     }
 
-    public function destroy(Product $product): JsonResponse
+    public function destroy(string $uuid): JsonResponse
     {
         try {
-            $this->service->delete($product->id);
+            $this->service->delete($uuid);
 
-            return response()->json(['message' => 'Product deleted successfully.']);
+            return $this->responseOk(null, 'Product deleted successfully.');
         } catch (\Exception $e) {
             return $this->responseUnprocessableEntity($e->getMessage());
         }

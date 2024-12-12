@@ -3,27 +3,39 @@
 namespace App\Domains\Product\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Product extends Model
 {
+    public $incrementing = false;
+
+    protected $keyType = 'string';
+
+    protected $primaryKey = 'uuid';
+
     protected $table = 'products';
     public $timestamps = true;
     protected $fillable = [
-        'corporate_name',
-        'cnpj',
-        'email',
+        'description',
+        'price',
+        'stock',
     ];
 
     public function scopeSearch($query, $search): void
     {
-        $query->when($search['corporate_name'], function ($query, $search) {
-            $query->where('corporate_name', 'like', "%{$search}%");
-        })
-            ->when($search['cnpj'], function ($query, $search) {
-                $query->where('cnpj', 'like', "%{$search}%");
-            })
-            ->when($search['email'], function ($query, $search) {
-                $query->where('email', 'like', "%{$search}%");
-            });
+        $query->when(isset($search['description']), function ($query, $search) {
+            $query->where('description', 'like', "%{$search}%");
+        });
+    }
+
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->{$model->getKeyName()})) {
+                $model->{$model->getKeyName()} = (string) Str::uuid();
+            }
+        });
     }
 }

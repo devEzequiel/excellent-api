@@ -5,8 +5,8 @@ namespace App\Domains\Product\Contracts;
 interface ProductRepositoryInterface
 {
     public function getAll(array $search);
-    public function getById(int $id);
+    public function getById(string $uuid);
     public function create(array $data);
-    public function update(int $id, array $data);
-    public function delete(int $id): bool;
+    public function update(string $uuid, array $data);
+    public function delete(string $uuid): bool;
 }

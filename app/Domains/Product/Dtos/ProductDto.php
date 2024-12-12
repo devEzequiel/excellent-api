@@ -4,29 +4,29 @@ namespace App\Domains\Product\Dtos;
 
 class ProductDto
 {
-    public string $corporate_name;
-    public string $cnpj;
-    public string $email;
+    public string $description;
+    public float $price;
+    public int $stock;
 
-    /**
-     * Construtor do DTO.
-     */
-    public function __construct(string $corporate_name, string $cnpj, string $email)
+    public function __construct(string $description, float $price, int $stock)
     {
-        $this->corporate_name = $corporate_name;
-        $this->cnpj = $cnpj;
-        $this->email = $email;
+        $this->description = $description;
+        $this->price = $price;
+        $this->stock = $stock;
     }
 
     /**
-     * Cria uma instância do DTO a partir de um array (exemplo: dados da requisição).
+     * Creates a new instance of the class from an array of data.
+     *
+     * @param array $data Input data containing keys for 'description', 'price', and 'stock'.
+     * @return self
      */
     public static function fromArray(array $data): self
     {
         return new self(
-            corporate_name: $data['corporate_name'] ?? '',
-            cnpj: $data['cnpj'] ?? '',
-            email: $data['email'] ?? ''
+            description: $data['description'] ?? '',
+            price: $data['price'] ?? null,
+            stock: $data['stock'] ?? null
         );
     }
 }
