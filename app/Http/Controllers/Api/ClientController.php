@@ -48,7 +48,7 @@ class ClientController extends Controller
             $dto = ClientDto::fromArray($request->all());
             $this->service->create($dto);
 
-            return $this->responseCreated("Client created.");
+            return $this->responseCreated("Order created.");
         } catch (\Exception $e) {
             return $this->responseUnprocessableEntity($e->getMessage());
         }
@@ -71,7 +71,7 @@ class ClientController extends Controller
         try {
             $this->service->delete($client->id);
 
-            return response()->json(['message' => 'Client deleted successfully.']);
+            return response()->json(['message' => 'Order deleted successfully.']);
         } catch (\Exception $e) {
             return $this->responseUnprocessableEntity($e->getMessage());
         }
