@@ -38,7 +38,7 @@ class Client extends Model
 
         static::creating(function ($model) {
             if (empty($model->{$model->getKeyName()})) {
-                $model->{$model->getKeyName()} = (string) Str::uuid(); // Geração automática de UUID
+                $model->{$model->getKeyName()} = (string) Str::uuid();
             }
         });
     }
