@@ -19,7 +19,10 @@ class ClientDto
     }
 
     /**
-     * Cria uma instância do DTO a partir de um array (exemplo: dados da requisição).
+     * Create a ClientDto instance from an array.
+     *
+     * @param array $data Input data array containing 'corporate_name', 'cnpj', and 'email'.
+     * @return self A new instance of ClientDto.
      */
     public static function fromArray(array $data): self
     {
