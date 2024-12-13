@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Api\Order;
 
+use App\Domains\Order\Dtos\OrderDto;
 use App\Domains\Order\Services\OrderService;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Order\CreateOrderRequest;
+use App\Http\Requests\Order\UpdateOrderRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -16,50 +19,57 @@ class OrderController extends Controller
         $this->service = $service;
     }
 
-    public function index(SearchClientRequest $request): JsonResponse
+    public function index(): JsonResponse
     {
         try {
-            $search = $request->validated();
-            $clients = $this->service->list($search);
+            $orders = $this->service->list();
 
-            return $this->responseOk($clients);
+            return $this->responseOk($orders);
         } catch (\Exception $e) {
             return $this->responseUnprocessableEntity($e->getMessage());
         }
     }
 
-    public function show(string $uuid)
+    public function show(string $uuid): JsonResponse
     {
         try {
-            $client = $this->service->findById($uuid);
+            $order = $this->service->findById($uuid);
 
-            return $this->responseOk($client);
+            $orderDto = $this->service->formatOrderToDto($order);
+
+            return $this->responseOk($orderDto->toArray());
         } catch (\Exception $e) {
             return $this->responseNotFound($e->getMessage());
         }
     }
 
-    public function store(CreateClientRequest $request): JsonResponse
+    public function store(CreateOrderRequest $request): JsonResponse
     {
         try {
             $data = $request->validated();
-            $dto = ClientDto::fromArray($data);
-            $client = $this->service->create($dto);
 
-            return $this->responseCreated($client, "Client created.");
+            $orderDto = OrderDto::fromArray($data);
+            $order = $this->service->create($orderDto);
+
+            $orderDtoResponse = $this->service->formatOrderToDto($order);
+
+            return $this->responseCreated($orderDtoResponse->toArray(), "Order created.");
         } catch (\Exception $e) {
             return $this->responseUnprocessableEntity($e->getMessage());
         }
     }
 
-    public function update(UpdateClientRequest $request, string $uuid): JsonResponse
+    public function update(UpdateOrderRequest $request, string $uuid): JsonResponse
     {
         try {
             $data = $request->validated();
-            $dto = ClientDto::fromArray($data);
-            $updatedClient = $this->service->update($uuid, $dto);
 
-            return $this->responseOk($updatedClient, 'Client updated.');
+            $orderDto = OrderDto::fromArray($data);
+            $order = $this->service->update($uuid, $orderDto);
+
+            $orderDtoResponse = $this->service->formatOrderToDto($order);
+
+            return $this->responseOk($orderDtoResponse->toArray(), 'Order updated.');
         } catch (\Exception $e) {
             return $this->responseUnprocessableEntity($e->getMessage());
         }
@@ -70,7 +80,7 @@ class OrderController extends Controller
         try {
             $this->service->delete($uuid);
 
-            return response()->json(['message' => 'Client deleted successfully.']);
+            return response()->json(['message' => 'Order deleted successfully.']);
         } catch (\Exception $e) {
             return $this->responseUnprocessableEntity($e->getMessage());
         }
