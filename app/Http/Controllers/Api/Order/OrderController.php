@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Api\Order;
 
 use App\Domains\Order\Services\OrderService;
-use App\Http\Controllers\Api\Client;
-use App\Http\Controllers\Api\ClientDto;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -18,23 +16,22 @@ class OrderController extends Controller
         $this->service = $service;
     }
 
-    public function index(Request $request): JsonResponse
+    public function index(SearchClientRequest $request): JsonResponse
     {
         try {
-            $search = $request->only(['corporate_name', 'cnpj', 'email']);
-
+            $search = $request->validated();
             $clients = $this->service->list($search);
 
-            return response()->json($clients);
+            return $this->responseOk($clients);
         } catch (\Exception $e) {
             return $this->responseUnprocessableEntity($e->getMessage());
         }
     }
 
-    public function show(int $id)
+    public function show(string $uuid)
     {
         try {
-            $client = $this->service->findById($id);
+            $client = $this->service->findById($uuid);
 
             return $this->responseOk($client);
         } catch (\Exception $e) {
@@ -42,36 +39,38 @@ class OrderController extends Controller
         }
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(CreateClientRequest $request): JsonResponse
     {
         try {
-            $dto = ClientDto::fromArray($request->all());
-            $this->service->create($dto);
+            $data = $request->validated();
+            $dto = ClientDto::fromArray($data);
+            $client = $this->service->create($dto);
 
-            return $this->responseCreated("Product created.");
+            return $this->responseCreated($client, "Client created.");
         } catch (\Exception $e) {
             return $this->responseUnprocessableEntity($e->getMessage());
         }
     }
 
-    public function update(Request $request, Client $client): JsonResponse
+    public function update(UpdateClientRequest $request, string $uuid): JsonResponse
     {
         try {
-            $dto = ClientDto::fromArray($request->all());
-            $updatedClient = $this->service->update($client->id, $dto);
+            $data = $request->validated();
+            $dto = ClientDto::fromArray($data);
+            $updatedClient = $this->service->update($uuid, $dto);
 
-            return response()->json(['data' => $updatedClient]);
+            return $this->responseOk($updatedClient, 'Client updated.');
         } catch (\Exception $e) {
             return $this->responseUnprocessableEntity($e->getMessage());
         }
     }
 
-    public function destroy(Client $client): JsonResponse
+    public function destroy(string $uuid): JsonResponse
     {
         try {
-            $this->service->delete($client->id);
+            $this->service->delete($uuid);
 
-            return response()->json(['message' => 'Product deleted successfully.']);
+            return response()->json(['message' => 'Client deleted successfully.']);
         } catch (\Exception $e) {
             return $this->responseUnprocessableEntity($e->getMessage());
         }

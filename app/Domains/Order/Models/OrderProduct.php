@@ -2,20 +2,20 @@
 
 namespace App\Domains\Order\Models;
 
-use App\Domains\Client\Models\Client;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Order extends Model
+class OrderProduct extends Model
 {
-    protected $table = 'orders';
     public $incrementing = false;
     protected $keyType = 'string';
     protected $primaryKey = 'uuid';
-    public $timestamps = true;
+
+    protected $table = 'order_products';
     protected $fillable = [
-        'client_id',
-        'total',
+        'order_id',
+        'product_id',
+        'quantity',
         'uuid'
     ];
 
@@ -28,15 +28,5 @@ class Order extends Model
                 $model->{$model->getKeyName()} = (string)Str::uuid();
             }
         });
-    }
-
-    public function client()
-    {
-        return $this->hasOne(Client::class, 'uuid', 'client_id');
-    }
-
-    public function products()
-    {
-        return $this->hasMany(OrderProduct::class, 'order_id', 'uuid');
     }
 }

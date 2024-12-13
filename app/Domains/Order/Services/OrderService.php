@@ -20,31 +20,31 @@ class OrderService
         return $this->repository->getAll($search);
     }
 
-    public function findById(int $id): ?\Illuminate\Database\Eloquent\Model
+    public function findById(string $uuid): ?\Illuminate\Database\Eloquent\Model
     {
-        return $this->repository->getById($id);
+        return $this->repository->getById($uuid);
     }
 
     public function create(OrderDto $dto): Order
     {
         return $this->repository->create([
-            'corporate_name' => $dto->corporate_name,
-            'cnpj' => $dto->cnpj,
-            'email' => $dto->email,
+            'client_id' => $dto->client->uuid,
+            'total' => $dto->total,
+            'quantity' => $dto->quantity,
         ]);
     }
 
-    public function update(int $id, OrderDto $dto): ?\Illuminate\Database\Eloquent\Model
+    public function update(string $uuid, OrderDto $dto): ?\Illuminate\Database\Eloquent\Model
     {
-        return $this->repository->update($id, [
-            'corporate_name' => $dto->corporate_name,
-            'cnpj' => $dto->cnpj,
-            'email' => $dto->email,
+        return $this->repository->update($uuid, [
+            'client_id' => $dto->client->uuid,
+            'total' => $dto->total,
+            'quantity' => $dto->quantity,
         ]);
     }
 
-    public function delete(int $id): bool
+    public function delete(string $uuid): bool
     {
-        return $this->repository->delete($id);
+        return $this->repository->delete($uuid);
     }
 }
