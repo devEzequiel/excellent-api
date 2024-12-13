@@ -47,11 +47,9 @@ class OrderController extends Controller
     {
         try {
             $data = $request->validated();
+            $order = $this->service->create($data);
 
-            $orderDto = OrderDto::fromArray($data);
-            $order = $this->service->create($orderDto);
-
-            $orderDtoResponse = $this->service->formatOrderToDto($order);
+//            $orderDtoResponse = $this->service->formatOrderToDto($order);
 
             return $this->responseCreated($orderDtoResponse->toArray(), "Order created.");
         } catch (\Exception $e) {
@@ -64,8 +62,7 @@ class OrderController extends Controller
         try {
             $data = $request->validated();
 
-            $orderDto = OrderDto::fromArray($data);
-            $order = $this->service->update($uuid, $orderDto);
+            $order = $this->service->update($uuid, $data);
 
             $orderDtoResponse = $this->service->formatOrderToDto($order);
 

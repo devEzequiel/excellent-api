@@ -9,9 +9,10 @@ return new class extends Migration {
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->uuid('uuid')->primary();
-            $table->foreignId('client_id')->constrained();
+            $table->uuid('client_id');
             $table->decimal('total');
 
+            $table->foreign('client_id')->references('uuid')->on('clients');
             $table->timestamps();
         });
     }

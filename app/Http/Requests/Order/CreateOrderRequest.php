@@ -25,8 +25,7 @@ class CreateOrderRequest extends FormRequest
             'client_id' => 'required|string|exists:clients,uuid',
             'products' => 'required|array',
             'products.*.id' => 'required|string|exists:products,uuid',
-            'products.*.quantity' => 'required|integer|min:1',
-            'total' => 'required|numeric'
+            'products.*.quantity' => 'required|integer|min:1'
         ];
     }
 }

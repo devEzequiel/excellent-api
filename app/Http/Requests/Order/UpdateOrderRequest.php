@@ -25,8 +25,7 @@ class UpdateOrderRequest extends FormRequest
             'client_id' => 'sometimes|string|exists:clients,uuid',
             'products' => 'sometimes|array',
             'products.*.id' => 'sometimes|string|exists:products,uuid',
-            'products.*.quantity' => 'sometimes|integer|min:1',
-            'total' => 'sometimes|numeric'
+            'products.*.quantity' => 'sometimes|integer|min:1'
         ];
     }
 }

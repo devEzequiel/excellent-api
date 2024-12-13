@@ -19,6 +19,13 @@ class Order extends Model
         'uuid'
     ];
 
+    public function scopeSearch($query, $search)
+    {
+        $query->when(isset($search['client_id']), function ($query, $search) {
+            $query->where('client_id', 'like', "%{$search}%");
+        });
+    }
+
     protected static function boot()
     {
         parent::boot();

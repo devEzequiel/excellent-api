@@ -26,22 +26,14 @@ class OrderService
         return $this->repository->getById($uuid);
     }
 
-    public function create(OrderDto $dto): Order
+    public function create(array $data): Order
     {
-        return $this->repository->create([
-            'client_id' => $dto->client->uuid,
-            'total' => $dto->total,
-            'quantity' => $dto->quantity,
-        ]);
+        return $this->repository->createOrder($data);
     }
 
-    public function update(string $uuid, OrderDto $dto): ?\Illuminate\Database\Eloquent\Model
+    public function update(string $uuid, array $data): ?\Illuminate\Database\Eloquent\Model
     {
-        return $this->repository->update($uuid, [
-            'client_id' => $dto->client->uuid,
-            'total' => $dto->total,
-            'quantity' => $dto->quantity,
-        ]);
+        return $this->repository->update($data, $uuid);
     }
 
     public function delete(string $uuid): bool
@@ -49,7 +41,7 @@ class OrderService
         return $this->repository->delete($uuid);
     }
 
-    public function formatOrderToDto(Order $order): OrderDto
+    public function formatOrderToDto(Order $order)
     {
         return new OrderDto(
             $order->uuid,

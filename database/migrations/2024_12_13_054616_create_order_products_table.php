@@ -8,12 +8,14 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('order_products', function (Blueprint $table) {
-            $table->id();
+            $table->uuid()->primary();
 
-            $table->foreignId('order_id');
-            $table->foreignId('product_id');
+            $table->uuid('order_id');
+            $table->uuid('product_id');
             $table->integer('quantity');
 
+            $table->foreign('order_id')->references('uuid')->on('orders');
+            $table->foreign('product_id')->references('uuid')->on('products');
             $table->timestamps();
         });
     }
