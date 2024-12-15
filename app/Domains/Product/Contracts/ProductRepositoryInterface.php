@@ -9,4 +9,8 @@ interface ProductRepositoryInterface
     public function create(array $data);
     public function update(string $uuid, array $data);
     public function delete(string $uuid): bool;
+
+    public function uploadImages(array $data);
+
+    public function deleteImage(string $image_uuid);
 }

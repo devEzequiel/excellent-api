@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 
 class Product extends Model
 {
+    protected $with = ['images'];
     public $incrementing = false;
 
     protected $keyType = 'string';
@@ -37,5 +38,10 @@ class Product extends Model
                 $model->{$model->getKeyName()} = (string) Str::uuid();
             }
         });
+    }
+
+    public function images()
+    {
+        return $this->hasMany(ProductImage::class, 'product_id', 'uuid');
     }
 }

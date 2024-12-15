@@ -47,4 +47,14 @@ class ProductService
     {
         return $this->repository->delete($uuid);
     }
+
+    public function uploadImages(array $data)
+    {
+        return $this->repository->uploadImages($data);
+    }
+
+    public function deleteImage(string $image_uuid)
+    {
+        return $this->repository->deleteImage($image_uuid);
+    }
 }

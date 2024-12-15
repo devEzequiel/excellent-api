@@ -8,11 +8,11 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('product_images', function (Blueprint $table) {
-            $table->id();
+            $table->uuid()->primary();
+            $table->uuid('product_id');
+            $table->string('image_url');
 
-
-
-            $table->timestamps();
+            $table->foreign('product_id')->references('uuid')->on('products');
         });
     }
 
