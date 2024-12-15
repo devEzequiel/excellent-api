@@ -18,12 +18,12 @@ class OrderService
 
     public function list(array $search = []): \Illuminate\Database\Eloquent\Collection
     {
-        return $this->repository->getAll($search);
+        return $this->repository->getOrders($search);
     }
 
     public function findById(string $uuid): ?\Illuminate\Database\Eloquent\Model
     {
-        return $this->repository->getById($uuid);
+        return $this->repository->getOrderById($uuid);
     }
 
     public function create(array $data): Order
@@ -33,28 +33,39 @@ class OrderService
 
     public function update(string $uuid, array $data): ?\Illuminate\Database\Eloquent\Model
     {
-        return $this->repository->update($data, $uuid);
+        return $this->repository->updateOrder($uuid, $data);
     }
 
     public function delete(string $uuid): bool
     {
-        return $this->repository->delete($uuid);
+        return $this->repository->deleteOrder($uuid);
     }
 
-    public function formatOrderToDto(Order $order)
+    public function formatOrdersToDto($orders)
+    {
+        return $orders->map(fn($order) => $this->mapOrderToDto($order));
+    }
+
+    public function formatOrderToDto($order)
+    {
+        return $this->mapOrderToDto($order);
+    }
+
+    private function mapOrderToDto($order): OrderDto
     {
         return new OrderDto(
             $order->uuid,
             $order->client_id,
             $order->total,
-            $order->products->map(function ($product) {
-                return new OrderProductDto(
-                    $product->uuid,
-                    $product->order_id,
-                    $product->product_id,
-                    $product->quantity
-                );
-            })->toArray()
+            $order->products->map(fn($product) => $this->mapProductToDto($product))->toArray()
+        );
+    }
+
+    private function mapProductToDto($product): OrderProductDto
+    {
+        return new OrderProductDto(
+            $product->product_id,
+            $product->quantity
         );
     }
 }

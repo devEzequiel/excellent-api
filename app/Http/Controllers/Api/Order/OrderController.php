@@ -23,8 +23,9 @@ class OrderController extends Controller
     {
         try {
             $orders = $this->service->list();
+            $orderDto = $this->service->formatOrdersToDto($orders);
 
-            return $this->responseOk($orders);
+            return $this->responseOk($orderDto->toArray());
         } catch (\Exception $e) {
             return $this->responseUnprocessableEntity($e->getMessage());
         }
@@ -49,7 +50,7 @@ class OrderController extends Controller
             $data = $request->validated();
             $order = $this->service->create($data);
 
-//            $orderDtoResponse = $this->service->formatOrderToDto($order);
+            $orderDtoResponse = $this->service->formatOrderToDto($order);
 
             return $this->responseCreated($orderDtoResponse->toArray(), "Order created.");
         } catch (\Exception $e) {

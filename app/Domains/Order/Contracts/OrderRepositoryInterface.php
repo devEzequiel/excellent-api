@@ -4,9 +4,9 @@ namespace App\Domains\Order\Contracts;
 
 interface OrderRepositoryInterface
 {
-    public function getAll(array $search);
-    public function getById(string $uuid);
     public function createOrder(array $data);
-    public function update(string $uuid, array $data);
-    public function delete(string $uuid): bool;
+    public function getOrders();
+    public function getOrderById(string $uuid);
+    public function deleteOrder(string $uuid): bool;
+    public function updateOrder(string $uuid, array $data);
 }

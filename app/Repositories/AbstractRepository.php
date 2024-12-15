@@ -25,7 +25,7 @@ abstract class AbstractRepository
      * @param array $search
      * @return Collection
      */
-    public function getAll(array $search): \Illuminate\Database\Eloquent\Collection
+    public function getAll(array $search = []): \Illuminate\Database\Eloquent\Collection
     {
         return $this->model->search($search)->get();
     }
