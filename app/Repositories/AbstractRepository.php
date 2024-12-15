@@ -30,7 +30,6 @@ abstract class AbstractRepository
         return $this->model->search($search)->get();
     }
 
-
     public function getById(string $uuid): ?Model
     {
         return $this->model->find($uuid);
